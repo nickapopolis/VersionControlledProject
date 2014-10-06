@@ -1,0 +1,1 @@
+java -classpath "jgit.jar;jsch.jar;json.jar;bin" main.Main

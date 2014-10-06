@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="org.eclipse.jgit-3.5.0.201409260305-r.jar"/>
 	<classpathentry kind="lib" path="org.json-20120521.jar"/>
+	<classpathentry kind="lib" path="jsch-0.1.51.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

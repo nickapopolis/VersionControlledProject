@@ -1,3 +1,4 @@
+package main;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -5,7 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
@@ -15,7 +18,7 @@ public class FileUtils {
 	public static void insertIntoFileAfter(String filePath, String token,
 			String text) {
 		StringBuilder fileContents = new StringBuilder();
-		fileContents.append(readFileIntoString(filePath));
+		fileContents.append(readFileIntoString(filePath, false));
 
 		int tokenIndex = 0;
 		while ((tokenIndex = fileContents.indexOf(token, tokenIndex)) >= 0) {
@@ -25,14 +28,28 @@ public class FileUtils {
 		}
 		writeStringToFile(filePath, fileContents.toString());
 	}
-
-	public static String readFileIntoString(String filePath) {
+	
+	public static String readFileIntoString(String filePath, boolean includedInClassPath) {
 		String str = "";
 		BufferedReader in = null;
 		String fileString = "";
+		
 		try {
-			in = new BufferedReader(new InputStreamReader(new FileInputStream(
-					filePath), "UTF-8"));
+			InputStream is;
+			
+			if(includedInClassPath){
+				try{
+					is = new FileInputStream(filePath);
+					in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+				}catch(Exception e){
+					is = FileUtils.class.getResourceAsStream(filePath);
+					in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+				}
+			}else{
+				is = new FileInputStream(filePath);
+				in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			}
+			
 			while ((str = in.readLine()) != null) {
 				fileString += str +"\n";
 			}
@@ -66,6 +83,7 @@ public class FileUtils {
 		}
 		Writer out = null;
 		try {
+		
 			out = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(file), "UTF-8"));
 			out.write(text);
