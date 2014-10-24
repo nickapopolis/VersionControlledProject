@@ -73,13 +73,13 @@ public class VersionController {
 		Git.cloneRepository().setURI(remotePath).setDirectory(new File(localPath )).setCredentialsProvider(getCredentials()).call();
 
 	}
-	private boolean hasUpdates() throws RevisionSyntaxException, MissingObjectException, IncorrectObjectTypeException, AmbiguousObjectException, IOException, InvalidRemoteException, TransportException, GitAPIException{
+	private boolean hasUpdates() throws Exception{
 		
 		FileRepository repository = getRepository();
 		Git git = getGit();
 		
 		boolean hasUpdates = false;
-		git.fetch().call();
+		git.fetch().setCredentialsProvider(getCredentials()).call();
 		
 		RevWalk walk = new RevWalk(repository);
 		walk.markStart(walk.parseCommit(repository.resolve("refs/remotes/origin/master")));

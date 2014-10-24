@@ -1,0 +1,14 @@
+{
+    "installPath": {
+        "value": "",
+        "label": "Install Path",
+        "type": "filePath",
+        "required": "true"
+    },
+    "remoteURI": {
+        "value": "",
+        "label": "Source Path/ URL",
+        "type": "text",
+        "required": "true"
+    }
+}
