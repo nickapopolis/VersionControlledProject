@@ -2,6 +2,8 @@ package model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import main.FileUtils;
 
@@ -94,15 +96,26 @@ public class VersionController {
 		
 		return hasUpdates;
 	}
-	private void getAndApplyUpdates() throws IOException, WrongRepositoryStateException, InvalidConfigurationException, DetachedHeadException, InvalidRemoteException, CanceledException, RefNotFoundException, NoHeadException, TransportException, GitAPIException{
+	private void getAndApplyUpdates() throws Exception{
 		
 		Git git = getGit();
-		git.pull().call();
+		git.pull().setCredentialsProvider(getCredentials()).call();
 	}
 	private void runProject() throws IOException{
 		Runtime rt = Runtime.getRuntime();
-		String[] commands = FileUtils.readFileIntoString(projectSettings.get("installPath") + "\\.exec", false).split("\n");
-		rt.exec(commands, null, new File(projectSettings.get("installPath")));
+		String[] commands = FileUtils.readFileIntoString(projectSettings.get("installPath") + "\\.exec", false).split(" ");
+		
+		ArrayList<String> commandsList = new ArrayList<String>();
+		commandsList.add("cmd");
+		commandsList.add("/c");
+		commandsList.addAll(Arrays.asList(commands));
+		
+		
+		//rt.exec(new commands, null, new File(projectSettings.get("installPath")));
+		
+		ProcessBuilder pb = new ProcessBuilder(commandsList);
+		Process p = pb.directory(new File(projectSettings.get("installPath"))).start();
+		
 	}
 	private UsernamePasswordCredentialsProvider getCredentials() throws Exception{
 		if(credentials == null){
